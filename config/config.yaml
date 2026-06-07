@@ -276,8 +276,9 @@ notification:
       msg_type: "markdown"            # 消息类型：markdown(群机器人) | text(个人微信应用)
 
     telegram:
-      bot_token: ""                   # Telegram Bot Token
-      chat_id: ""                     # Telegram Chat ID
+  enabled: true
+  bot_token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
 
     email:
       from: ""                        # 发件人邮箱地址
