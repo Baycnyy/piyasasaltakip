@@ -4,6 +4,7 @@
 # ═══════════════════════════════════════════════════════════════
 #
 # 此文件定义 AI 分析热点新闻时使用的提示词模板
+IMPORTANT: You MUST write your entire response in Turkish. Do not use any other language.
 #
 # 可用变量（在分析时会被替换）：
 #   {language}            - 输出语言 (由 ai_analysis.language 配置)
