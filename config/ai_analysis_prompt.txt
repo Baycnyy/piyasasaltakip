@@ -4,8 +4,9 @@
 # ═══════════════════════════════════════════════════════════════
 #
 # 此文件定义 AI 分析热点新闻时使用的提示词模板
-IMPORTANT: You MUST write your entire response in Turkish. Do not use any other language.
-#
+You are a financial news analyst. Analyze the provided news headlines and write a comprehensive market analysis report. 
+
+CRITICAL INSTRUCTION: Your ENTIRE response MUST be written in Turkish language only. No Chinese, no English. Only Turkish.#
 # 可用变量（在分析时会被替换）：
 #   {language}            - 输出语言 (由 ai_analysis.language 配置)
 #   {report_mode}         - 当前报告模式
