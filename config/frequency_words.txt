@@ -1,0 +1,220 @@
+# ═══════════════════════════════════════════════════════════════
+#           TrendRadar - Finansal Yatırım Keyword Dosyası
+#                    Brom için özelleştirildi
+# ═══════════════════════════════════════════════════════════════
+#
+# SÖZDIZIMI (syntax):
+#   [Grup Adı]      → Grup başlığı (Telegram'da bu isimle görünür)
+#   kelime          → Bu kelimeyi içeren haberler eşleşir
+#   /kelime1|kelime2/ → Regex: birini içerirse eşleşir
+#   !kelime         → Bu kelimeyi içerenleri o gruptan dışla
+#   @5              → O gruptan max 5 haber göster
+#
+# ═══════════════════════════════════════════════════════════════
+
+
+# ───────────────────────────────────────────────────────────────
+#   GLOBAL FİLTRE — Bu kelimeleri içeren haberler HİÇ gelmesin
+# ───────────────────────────────────────────────────────────────
+
+[GLOBAL_FILTER]
+# Clickbait / reklam içerikleri
+sponsored
+advertisement
+giveaway
+# Alakasız kategoriler
+recipe
+sports
+football
+soccer
+celebrity
+gossip
+
+
+# ───────────────────────────────────────────────────────────────
+#   TÜRK PİYASALARI
+# ───────────────────────────────────────────────────────────────
+
+[BIST / Borsa İstanbul]
+/\bBIST\b|\bXU100\b|\bXU030\b/ => BIST Endeks
+/Borsa İstanbul|Borsa istanbul/ => Borsa İstanbul
+/\bBİST\b/ => BİST
+
+[Türk Hisseleri]
+/THYAO|Türk Hava Yolları|Turkish Airlines/ => THY
+/GARAN|Garanti Bankası|Garanti BBVA/ => Garanti
+/AKBNK|Akbank/ => Akbank
+/ISCTR|İş Bankası|Isbank/ => İş Bankası
+/YKBNK|Yapı Kredi/ => Yapı Kredi
+/SASA|Sabancı/ => Sabancı
+/TOGG/ => TOGG
+/KCHOL|Koç Holding/ => Koç Holding
+/ASELS|Aselsan/ => Aselsan
+/TCELL|Turkcell/ => Turkcell
+/EREGL|Ereğli Demir/ => Erdemir
+/FROTO|Ford Otosan/ => Ford Otosan
+/PETKM|Petkim/ => Petkim
+/TUPRS|Tüpraş/ => Tüpraş
+
+[Türk Lirası / Döviz]
+/\bTRY\b|Türk Lirası|TL kuru/ => TL
+/dolar\/TL|USD\/TRY|dolar kuru/ => Dolar/TL
+/euro\/TL|EUR\/TRY|euro kuru/ => Euro/TL
+
+[TCMB / Türk Ekonomisi]
+/TCMB|Merkez Bankası|Türkiye Cumhuriyet Merkez/ => TCMB
+/faiz kararı|faiz artışı|faiz indirimi|politika faizi/ => Faiz Kararı
+/enflasyon|TÜFE|ÜFE|TÜİK/ => Enflasyon TR
+/cari açık|bütçe açığı|kamu borcu/ => Bütçe/Cari Açık
+/SPK|Sermaye Piyasaları/ => SPK
+/hazine|Hazine ve Maliye/ => Hazine
+
+
+# ───────────────────────────────────────────────────────────────
+#   KÜRESEL MERKEZ BANKALARI
+# ───────────────────────────────────────────────────────────────
+
+[Fed / ABD Para Politikası]
+/\bFed\b|Federal Reserve|FOMC|Jerome Powell/ => Fed
+/interest rate|rate hike|rate cut|basis points/ => Fed Faiz
+/\bFOMC\b|Fed meeting|Fed decision/ => FOMC Toplantısı
+
+[ECB / Avrupa]
+/\bECB\b|European Central Bank|Christine Lagarde/ => ECB
+
+[Diğer Merkez Bankaları]
+/\bBank of England\b|\bBoE\b/ => Bank of England
+/\bBank of Japan\b|\bBoJ\b/ => Bank of Japan
+
+
+# ───────────────────────────────────────────────────────────────
+#   KÜRESEL PİYASALAR
+# ───────────────────────────────────────────────────────────────
+
+[ABD Endeksleri]
+/S&P 500|S&P500|SPX|SP500/ => S&P 500
+/\bNasdaq\b|\bNASDAQ\b|\bQQQ\b/ => Nasdaq
+/Dow Jones|\bDJIA\b/ => Dow Jones
+/\bVIX\b|volatility index|fear index/ => VIX (Korku Endeksi)
+
+[Piyasa Yönü]
+/bull market|bullish|rally|all-time high|\bATH\b/ => Yükseliş Trendi
+/bear market|bearish|market crash|sell-off|correction/ => Düşüş Trendi
+/recession|economic downturn|stagflation/ => Resesyon
+/market crash|black swan|circuit breaker/ => Piyasa Çöküşü
+
+
+# ───────────────────────────────────────────────────────────────
+#   EKONOMİK GÖSTERGELER
+# ───────────────────────────────────────────────────────────────
+
+[Enflasyon / Büyüme]
+/\bCPI\b|consumer price index|inflation rate/ => Enflasyon (CPI)
+/\bPPI\b|producer price index/ => ÜFE (PPI)
+/\bGDP\b|gross domestic product|economic growth/ => GSYİH/Büyüme
+/unemployment rate|jobless claims|nonfarm payroll/ => İşsizlik
+
+[Tahvil / Faiz]
+/treasury yield|bond yield|10-year yield|\bT-bill\b/ => ABD Tahvil Faizi
+/yield curve|inverted yield/ => Yield Curve
+/\bDXY\b|dollar index|US dollar index/ => Dolar Endeksi (DXY)
+
+
+# ───────────────────────────────────────────────────────────────
+#   KRİPTO PARA
+# ───────────────────────────────────────────────────────────────
+
+[Bitcoin]
+/\bBitcoin\b|\bBTC\b|bitcoin halving/ => Bitcoin
+
+[Ethereum]
+/\bEthereum\b|\bETH\b/ => Ethereum
+
+[Kripto Genel]
+/\bcrypto\b|cryptocurrency|digital asset|blockchain/ => Kripto
+/\bSEC\b.*crypto|crypto.*\bSEC\b|crypto regulation/ => Kripto Regülasyon
+/\bDeFi\b|decentralized finance/ => DeFi
+/\bNFT\b|non-fungible/ => NFT
+/\bstablecoin\b|\bUSDT\b|\bUSDC\b/ => Stablecoin
+
+
+# ───────────────────────────────────────────────────────────────
+#   EMTİA
+# ───────────────────────────────────────────────────────────────
+
+[Altın / Gümüş]
+/\bgold\b|gold price|XAU|ons altın|altın fiyatı/ => Altın
+/\bsilver\b|silver price|\bXAG\b/ => Gümüş
+
+[Petrol / Enerji]
+/\bcrude oil\b|\bWTI\b|\bBrent\b|oil price|petrol fiyatı/ => Petrol
+/\bOPEC\b|OPEC\+/ => OPEC
+/natural gas|doğal gaz/ => Doğal Gaz
+
+
+# ───────────────────────────────────────────────────────────────
+#   KİLİT ŞİRKETLER (Piyasayı etkileyen)
+# ───────────────────────────────────────────────────────────────
+
+[Nvidia]
+/\bNvidia\b|\bNVDA\b|Jensen Huang|\bCUDA\b|\bH100\b|\bBlackwell\b/ => Nvidia
+
+[Apple]
+/\bApple\b|\bAAPL\b|Tim Cook|\biPhone\b|\bMacBook\b/ => Apple
+
+[Tesla]
+/\bTesla\b|\bTSLA\b|Elon Musk|\bCybertruck\b/ => Tesla
+
+[Microsoft]
+/\bMicrosoft\b|\bMSFT\b|Satya Nadella|\bAzure\b|\bCopilot\b/ => Microsoft
+
+[Google / Alphabet]
+/\bGoogle\b|\bAlphabet\b|\bGOOGL\b|Sundar Pichai|\bGemini\b/ => Google
+
+[Amazon]
+/\bAmazon\b|\bAMZN\b|Andy Jassy|\bAWS\b/ => Amazon
+
+[Meta]
+/\bMeta\b|\bMETA\b|Mark Zuckerberg|\bFacebook\b|\bInstagram\b/ => Meta
+
+[Berkshire / Warren Buffett]
+/Warren Buffett|Berkshire Hathaway|\bBRK\b/ => Buffett/Berkshire
+
+[JPMorgan / Büyük Bankalar]
+/\bJPMorgan\b|\bJPM\b|Jamie Dimon/ => JPMorgan
+/Goldman Sachs|\bGS\b/ => Goldman Sachs
+/\bBlackRock\b/ => BlackRock
+
+
+# ───────────────────────────────────────────────────────────────
+#   YATIRIM ARAÇLARI / KAVRAMLAR
+# ───────────────────────────────────────────────────────────────
+
+[ETF / Fon]
+/\bETF\b|exchange-traded fund|index fund/ => ETF
+/\bSPY\b|\bQQQ\b|\bVOO\b|\bVTI\b/ => Popüler ETF'ler
+
+[Temettü / Geri Alım]
+/dividend|stock buyback|share repurchase/ => Temettü/Geri Alım
+
+[IPO / Halka Arz]
+/\bIPO\b|initial public offering|halka arz|going public/ => IPO/Halka Arz
+
+[Birleşme & Satın Alma]
+/merger|acquisition|takeover|\bM&A\b/ => M&A
+
+[Hedge Fon / Büyük Para]
+/hedge fund|short selling|short squeeze|short interest/ => Hedge Fon
+/insider trading|SEC filing|\b13F\b/ => Büyük Yatırımcı Hareketleri
+
+
+# ───────────────────────────────────────────────────────────────
+#   JEOPOLİTİK / PİYASAYI ETKELEYEN HABERLER
+# ───────────────────────────────────────────────────────────────
+
+[Ticaret Savaşı / Tarife]
+/tariff|trade war|trade deal|sanction/ => Tarife/Ticaret Savaşı
+/\bChina\b.*trade|\btrade\b.*\bChina\b/ => Çin-ABD Ticaret
+
+[Jeopolitik Risk]
+/geopolitical|war risk|oil embargo|energy crisis/ => Jeopolitik Risk
