@@ -916,6 +916,39 @@ class NewsAnalyzer:
 
         return stats, html_file, ai_result, rss_items
 
+    def _translate_hotlist_titles(self, stats: Optional[List[Dict]]) -> None:
+        """Hotlist (Çin) başlıklarını hedef dile çevirir (yerinde). Hata olursa orijinali korur."""
+        if not stats:
+            return
+        cfg = self.ctx.config
+        trans_config = cfg.get("AI_TRANSLATION", {})
+        scope = trans_config.get("SCOPE", {})
+        if not trans_config.get("ENABLED", False) or not scope.get("HOTLIST", False):
+            return
+
+        refs = []
+        texts = []
+        for stat in stats:
+            for it in stat.get("titles", []):
+                title = (it.get("title") or "").strip()
+                if title:
+                    refs.append(it)
+                    texts.append(title)
+        if not texts:
+            return
+
+        try:
+            from trendradar.ai import AITranslator
+
+            translator = AITranslator(trans_config, cfg.get("AI", {}))
+            result = translator.translate_batch(texts)
+            for ref, tr in zip(refs, result.results):
+                if getattr(tr, "success", False) and getattr(tr, "translated_text", ""):
+                    ref["title"] = tr.translated_text
+            print(f"[Dijest] {len(texts)} hotlist başlığı çevrildi")
+        except Exception as e:
+            print(f"[Dijest] Hotlist çeviri atlandı ({e}), orijinal başlıklarla devam")
+
     def _send_digest(self, stats: List[Dict], rss_items: Optional[List[Dict]]) -> None:
         """Günlük dijest: hotlist+RSS'i TR temalarına grupla, AI ile 1-5 puanla, Telegram'a gönder.
 
@@ -931,6 +964,12 @@ class NewsAnalyzer:
         from trendradar.ai.client import AIClient
 
         cfg = self.ctx.config
+
+        # Hotlist (Çin kaynakları) başlıklarını Türkçeye çevir.
+        # RSS başlıkları pipeline'da zaten çevrildi; hotlist çevirisi normalde
+        # dispatch_all içinde olur ama dijest onu atladığı için burada yapıyoruz.
+        self._translate_hotlist_titles(stats)
+
         themes = build_digest_themes(stats or [], rss_items or [])
         items = [it for t in themes for it in t["items"]]
         if not items:
