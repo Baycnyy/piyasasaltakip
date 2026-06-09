@@ -218,3 +218,37 @@ gossip
 
 [Jeopolitik Risk]
 /geopolitical|war risk|oil embargo|energy crisis/ => Jeopolitik Risk
+
+
+# ───────────────────────────────────────────────────────────────
+#   ÇİN MAKRO / KÜRESEL ETKİ
+#   Kaynak: WallStreetCN + CLS (Çince başlık döndürürler).
+#   Aşağıdaki Çince keyword'ler YALNIZCA Türkiye/küresel piyasayı
+#   etkileyen makro temaları yakalar; iç gündem (yerel hisse dedikodusu,
+#   magazin) elenir. Eşleşenler AI ile Türkçeye çevrilip ayrı bölümde
+#   gösterilir.
+# ───────────────────────────────────────────────────────────────
+
+[Çin Para Politikası]
+/央行|人民银行|降准|降息|加息|LPR|货币政策/ => Çin Merkez Bankası
+/人民币|离岸人民币|汇率|外汇储备/ => Yuan / Kur
+
+[Çin Makro Veri]
+/通胀|通胀率|CPI|PPI|GDP|经济增长|PMI|制造业/ => Çin Makro Veri
+/出口|进口|贸易顺差|贸易逆差|外贸/ => Çin Dış Ticaret
+
+[Çin Borsaları]
+/A股|沪指|上证|深证|创业板|港股|恒生|北向资金|外资/ => Çin Borsaları
+
+[ABD-Çin / Jeopolitik (Çin kaynağı)]
+/关税|贸易战|制裁|脱钩|出口管制|实体清单/ => ABD-Çin Gerilim
+/美联储|联储|鲍威尔|加息周期|降息周期/ => Fed (Çin kaynağı)
+/特朗普|拜登|白宫|美国大选/ => ABD Siyaset (Çin kaynağı)
+
+[Çin Emtia / Enerji (Çin kaynağı)]
+/黄金|金价|国际金价/ => Altın (Çin kaynağı)
+/原油|石油|油价|布伦特|OPEC|欧佩克/ => Petrol (Çin kaynağı)
+/铜价|铁矿石|大宗商品|有色金属/ => Emtia (Çin kaynağı)
+
+[Çin Teknoloji / Çip (Çin kaynağı)]
+/芯片|半导体|英伟达|台积电|光刻机|国产替代/ => Çin Çip / Yarı İletken

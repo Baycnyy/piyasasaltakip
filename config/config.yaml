@@ -25,46 +25,27 @@ schedule:
 # 2. 数据源 - 热榜平台
 #
 # ÖNEMLI: platforms.enabled: true olmalı, yoksa crawler çalışmıyor!
-# Çin platformları İngilizce keyword'lerimizle eşleşmez,
-# Telegram'a sadece RSS içerikleri gider.
+# Yalnızca 2 Çin FİNANS kaynağı tutuldu (WallStreetCN + CLS).
+# Çince başlıklar, frequency_words.txt'teki "ÇİN MAKRO" keyword grubuyla
+# yalnızca küresel etkili haberlerde eşleşir; AI ile Türkçeye çevrilip
+# ayrı bölüm olarak Telegram'a gider.
 # ===============================================================
 platforms:
   enabled: true                         # TRUE olmak ZORUNDA - aksi halde sistem başlamıyor
   api_url: ""
   sources:
-    - id: "toutiao"
-      name: "今日头条"
-      expected_domain: "toutiao.com"
-    - id: "baidu"
-      name: "百度热搜"
-      expected_domain: "baidu.com"
+    # SADECE Çin FİNANS kaynakları tutuldu. Sosyal/genel platformlar
+    # (Weibo, Douyin, Zhihu, Bilibili, Baidu, Toutiao, ThePaper, Ifeng,
+    # Tieba) kaldırıldı — Türk yatırımcısı için gürültü yaratıyorlardı.
+    # Bu iki kaynak Çince başlık döndürür; aşağıdaki Çince makro keyword
+    # grubu (frequency_words.txt) ile yalnızca küresel etkili haberler
+    # eşleşir ve AI ile Türkçeye çevrilir.
     - id: "wallstreetcn-hot"
-      name: "华尔街见闻"
+      name: "WallStreetCN"
       expected_domain: "wallstreetcn.com"
-    - id: "thepaper"
-      name: "澎湃新闻"
-      expected_domain: "thepaper.cn"
-    - id: "bilibili-hot-search"
-      name: "bilibili 热搜"
-      expected_domain: "bilibili.com"
     - id: "cls-hot"
-      name: "财联社热门"
+      name: "CaiLianShe (CLS)"
       expected_domain: "cls.cn"
-    - id: "ifeng"
-      name: "凤凰网"
-      expected_domain: "ifeng.com"
-    - id: "tieba"
-      name: "贴吧"
-      expected_domain: "baidu.com"
-    - id: "weibo"
-      name: "微博"
-      expected_domain: "weibo.com"
-    - id: "douyin"
-      name: "抖音"
-      expected_domain: "douyin.com"
-    - id: "zhihu"
-      name: "知乎"
-      expected_domain: "zhihu.com"
 
 
 # ===============================================================
@@ -164,7 +145,7 @@ display:
     - ai_analysis                       # En sona AI özeti
 
   regions:
-    hotlist: false                      # Çin platform haberleri gizli (crawler hâlâ çalışır)
+    hotlist: true                       # Çin finans haberleri ayrı bölüm olarak görünür
     new_items: false
     rss: true
     standalone: false
@@ -289,7 +270,7 @@ ai_translation:
   prompt_file: "ai_translation_prompt.txt"
 
   scope:
-    hotlist: false                      # Çin platformları zaten Türkçe keyword'le eşleşmez
+    hotlist: true                       # Çin finans başlıklarını Türkçeye çevir
     rss: true                           # RSS başlıklarını Türkçeye çevir
     standalone: false
 
