@@ -789,10 +789,10 @@ def send_to_ntfy(
 
     # 避免 HTTP header 编码问题
     report_type_en_map = {
-        "全天汇总": "Daily Summary",
-        "当前榜单": "Current Ranking",
-        "增量分析": "Incremental Update",
-        "通知连通性测试": "Notification Test",
+        "Günlük Özet": "Daily Summary",
+        "Anlık Liste": "Current Ranking",
+        "Artımlı Analiz": "Incremental Update",
+        "Bildirim Testi": "Notification Test",
     }
     report_type_en = report_type_en_map.get(report_type, "News Report")
 

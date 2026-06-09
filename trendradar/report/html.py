@@ -1440,11 +1440,11 @@ def render_html_content(
 
     # 处理报告类型显示
     if mode == "current":
-        mode_display = "当前榜单"
+        mode_display = "Anlık Liste"
     elif mode == "incremental":
-        mode_display = "增量分析"
+        mode_display = "Artımlı Analiz"
     else:
-        mode_display = "全天汇总"
+        mode_display = "Günlük Özet"
 
     # 计算各项数据
     hot_news_count = sum(len(stat["titles"]) for stat in report_data["stats"])

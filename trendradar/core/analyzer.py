@@ -556,7 +556,7 @@ def count_rss_frequency(
     if not word_groups:
         if not quiet:
             print("[RSS] 频率词配置为空，将显示所有 RSS 条目")
-        word_groups = [{"required": [], "normal": [], "group_key": "全部 RSS"}]
+        word_groups = [{"required": [], "normal": [], "group_key": "Tüm RSS"}]
         filter_words = []
 
     # 创建新增条目的 URL 集合，用于快速查找
@@ -605,8 +605,8 @@ def count_rss_frequency(
             normal_words = group["normal"]
             group_key = group["group_key"]
 
-            # "全部 RSS" 模式：所有条目都匹配
-            if len(word_groups) == 1 and word_groups[0]["group_key"] == "全部 RSS":
+            # "Tüm RSS" 模式：所有条目都匹配
+            if len(word_groups) == 1 and word_groups[0]["group_key"] == "Tüm RSS":
                 matched = True
             else:
                 # 检查必须词（支持正则语法）

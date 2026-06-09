@@ -182,19 +182,19 @@ class NewsAnalyzer:
         "incremental": {
             "mode_name": "增量模式",
             "description": "增量模式（只关注新增新闻，无新增时不推送）",
-            "report_type": "增量分析",
+            "report_type": "Artımlı Analiz",
             "should_send_notification": True,
         },
         "current": {
             "mode_name": "当前榜单模式",
             "description": "当前榜单模式（当前榜单匹配新闻 + 新增新闻区域 + 按时推送）",
-            "report_type": "当前榜单",
+            "report_type": "Anlık Liste",
             "should_send_notification": True,
         },
         "daily": {
             "mode_name": "全天汇总模式",
             "description": "全天汇总模式（所有匹配新闻 + 新增新闻区域 + 按时推送）",
-            "report_type": "全天汇总",
+            "report_type": "Günlük Özet",
             "should_send_notification": True,
         },
     }
@@ -2068,10 +2068,10 @@ def _create_test_html_file(ctx: AppContext) -> Optional[str]:
         html_path = output_dir / f"notification_test_{ctx.format_time()}.html"
         html_content = f"""<!DOCTYPE html>
 <html lang="zh-CN">
-<head><meta charset="UTF-8"><title>TrendRadar 通知测试</title></head>
+<head><meta charset="UTF-8"><title>TrendRadar Bildirim Testi</title></head>
 <body>
-<h2>TrendRadar 通知连通性测试</h2>
-<p>测试时间：{now.strftime('%Y-%m-%d %H:%M:%S')} ({ctx.timezone})</p>
+<h2>TrendRadar Bildirim Testi</h2>
+<p>Test zamanı: {now.strftime('%Y-%m-%d %H:%M:%S')} ({ctx.timezone})</p>
 <p>这是一条测试消息，用于验证邮件渠道是否可达。</p>
 </body>
 </html>"""
@@ -2145,7 +2145,7 @@ def _run_test_notification(config: Dict) -> bool:
 
         results = dispatcher.dispatch_all(
             report_data=report_data,
-            report_type="通知连通性测试",
+            report_type="Bildirim Testi",
             proxy_url=proxy_url,
             mode="daily",
             html_file_path=html_file_path,

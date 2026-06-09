@@ -20,15 +20,15 @@ def get_batch_header(format_type: str, batch_num: int, total_batches: int) -> st
         格式化的批次头部字符串
     """
     if format_type == "telegram":
-        return f"<b>[第 {batch_num}/{total_batches} 批次]</b>\n\n"
+        return f"<b>[Bölüm {batch_num}/{total_batches}]</b>\n\n"
     elif format_type == "slack":
-        return f"*[第 {batch_num}/{total_batches} 批次]*\n\n"
+        return f"*[Bölüm {batch_num}/{total_batches}]*\n\n"
     elif format_type in ("wework_text", "bark"):
         # 企业微信文本模式和 Bark 使用纯文本格式
-        return f"[第 {batch_num}/{total_batches} 批次]\n\n"
+        return f"[Bölüm {batch_num}/{total_batches}]\n\n"
     else:
         # 飞书、钉钉、ntfy、企业微信 markdown 模式
-        return f"**[第 {batch_num}/{total_batches} 批次]**\n\n"
+        return f"**[Bölüm {batch_num}/{total_batches}]**\n\n"
 
 
 def get_max_batch_header_size(format_type: str) -> int:
