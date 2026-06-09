@@ -213,6 +213,7 @@ class NewsAnalyzer:
 
         self.request_interval = self.ctx.config["REQUEST_INTERVAL"]
         self.report_mode = self.ctx.config["REPORT_MODE"]
+        self.digest_mode = False  # --digest ile açılır: günlük puanlı dijest gönderir
         self.frequency_file = None
         self.filter_method = None  # None=使用全局配置 ctx.filter_method
         self.interests_file = None  # None=使用全局配置 ai_filter.interests_file
@@ -915,6 +916,62 @@ class NewsAnalyzer:
 
         return stats, html_file, ai_result, rss_items
 
+    def _send_digest(self, stats: List[Dict], rss_items: Optional[List[Dict]]) -> None:
+        """Günlük dijest: hotlist+RSS'i TR temalarına grupla, AI ile 1-5 puanla, Telegram'a gönder.
+
+        AI yalnızca öneri puanı verir; hiçbir haber elenmez. Normal AI analizi ve
+        çoklu-kanal dağıtımı çalıştırılmaz (sadece Telegram dijesti)."""
+        from trendradar.digest import (
+            build_digest_themes,
+            score_news,
+            apply_scores,
+            render_digest_telegram,
+            send_digest_telegram,
+        )
+        from trendradar.ai.client import AIClient
+
+        cfg = self.ctx.config
+        themes = build_digest_themes(stats or [], rss_items or [])
+        items = [it for t in themes for it in t["items"]]
+        if not items:
+            print("[Dijest] Eşleşen haber yok, dijest gönderilmiyor")
+            return
+
+        # AI ile 1-5 önem puanı (başarısız olursa nötr puanla devam)
+        debug_mode = cfg.get("DEBUG", False)
+        scores: Dict[int, int] = {}
+        try:
+            client = AIClient(cfg.get("AI", {}))
+            scores = score_news(
+                [{"id": it["id"], "title": it["title"], "source": it["source"]} for it in items],
+                client,
+                debug=debug_mode,
+            )
+        except Exception as e:
+            print(f"[Dijest] Puanlama atlandı ({e}), nötr puanla devam")
+        apply_scores(items, scores)
+
+        # her temayı önem puanına göre sırala (yüksek -> düşük)
+        for t in themes:
+            t["items"].sort(key=lambda x: -x.get("score", 0))
+
+        now = self.ctx.get_time()
+        window_label = now.strftime("%d.%m.%Y %H:%M")
+        text = render_digest_telegram(
+            themes, window_label, now_str=now.strftime("%Y-%m-%d %H:%M:%S")
+        )
+
+        tokens = parse_multi_account_config(cfg.get("TELEGRAM_BOT_TOKEN", ""))
+        chat_ids = parse_multi_account_config(cfg.get("TELEGRAM_CHAT_ID", ""))
+        if not tokens or not chat_ids:
+            print("[Dijest] Telegram bot_token/chat_id yok, gönderilemiyor")
+            return
+        sent = 0
+        for token, chat in zip(tokens, chat_ids):
+            if token and chat and send_digest_telegram(token, chat, text, self.proxy_url):
+                sent += 1
+        print(f"[Dijest] {len(items)} haber, {len(themes)} tema -> {sent} Telegram hesabına gönderildi")
+
     def _send_notification_if_needed(
         self,
         stats: List[Dict],
@@ -949,6 +1006,11 @@ class NewsAnalyzer:
             and has_notification
             and has_any_content
         ):
+            # Dijest modu: normal AI analizi + dağıtımı atla, sadece puanlı dijest gönder
+            if self.digest_mode:
+                self._send_digest(stats, rss_items)
+                return True
+
             # 输出推送内容统计
             content_parts = []
             if news_count > 0:
@@ -2206,6 +2268,11 @@ def main():
         action="store_true",
         help="发送测试通知到已配置渠道"
     )
+    parser.add_argument(
+        "--digest",
+        action="store_true",
+        help="Günlük dijest gönder (tema-tema tüm haberler + AI 1-5 puan)"
+    )
 
     args = parser.parse_args()
 
@@ -2244,6 +2311,12 @@ def main():
 
         # 复用已加载的配置，避免重复加载
         analyzer = NewsAnalyzer(config=config)
+
+        # Dijest modu: günün tamamını görmek için daily moda zorla, dijest gönderimi aç
+        if args.digest:
+            analyzer.digest_mode = True
+            analyzer.report_mode = "daily"
+            print("[Dijest] Dijest modu aktif (report_mode=daily)")
 
         # 设置更新信息（复用已获取的远程版本，不再重复请求）
         if analyzer.is_github_actions and need_update and remote_version:

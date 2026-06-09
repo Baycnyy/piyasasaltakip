@@ -10,13 +10,19 @@ Biriken günün haberlerini temaya göre gruplar, her habere AI ile 1-5
                 altta AI sıralaması)
 """
 
-from trendradar.digest.scorer import score_news, DEFAULT_SCORE
+from trendradar.digest.scorer import score_news, apply_scores, DEFAULT_SCORE
+from trendradar.digest.builder import build_digest_themes, categorize
 from trendradar.digest.formatter import render_digest_telegram, DigestItem, DigestTheme
+from trendradar.digest.sender import send_digest_telegram
 
 __all__ = [
     "score_news",
+    "apply_scores",
     "DEFAULT_SCORE",
+    "build_digest_themes",
+    "categorize",
     "render_digest_telegram",
+    "send_digest_telegram",
     "DigestItem",
     "DigestTheme",
 ]

@@ -3,6 +3,7 @@
 
 from trendradar.digest import scorer
 from trendradar.digest.formatter import render_digest_telegram
+from trendradar.digest.builder import build_digest_themes, categorize
 
 
 class FakeClient:
@@ -78,8 +79,48 @@ def test_formatter():
     print(out)
 
 
+def test_builder():
+    # kategorize
+    assert "BIST" in categorize("THYAO rekor kırdı", "Bloomberg HT")
+    assert "Döviz" in categorize("TCMB faizi sabit tuttu", "AA")
+    assert "Kripto" in categorize("Bitcoin yükseldi", "CoinDesk")
+    assert "Emtia" in categorize("Altın ons fiyatı arttı", "Investing")
+    assert "Çin" in categorize("China exports rose", "Reuters")
+    assert "Küresel" in categorize("Fed signals rate cut", "CNBC")
+    assert "Diğer" in categorize("Hava durumu", "X")
+
+    # hotlist stats şekli (analyzer çıktısı)
+    hotlist = [{"word": "Çin Merkez Bankası", "count": 1, "titles": [
+        {"title": "PBoC likidite enjekte etti", "source_name": "WallStreetCN",
+         "url": "https://c/1", "time_display": "10-15"},
+    ]}]
+    # rss_items şekli (kaynağa göre gruplu)
+    rss = [
+        {"source_name": "Bloomberg HT", "titles": [
+            {"title": "THYAO yolcu rekoru", "url": "https://r/1", "last_time": "14-30"},
+            {"title": "GARAN bilanço açıkladı", "url": "https://r/2", "last_time": "11-05"},
+        ]},
+        {"source_name": "CoinDesk", "titles": [
+            {"title": "Bitcoin 70 bin doları aştı", "url": "https://r/3", "last_time": "16-20"},
+        ]},
+    ]
+    themes = build_digest_themes(hotlist, rss)
+    names = [t["name"] for t in themes]
+    # BIST, Kripto, Çin temaları oluşmalı
+    assert any("BIST" in n for n in names), names
+    assert any("Kripto" in n for n in names), names
+    assert any("Çin" in n for n in names), names
+    # toplam 4 haber, id'ler benzersiz, zaman HH:MM'e çevrilmiş
+    all_items = [it for t in themes for it in t["items"]]
+    assert len(all_items) == 4, len(all_items)
+    assert all(":" in it["time"] for it in all_items), [it["time"] for it in all_items]
+    assert len({it["id"] for it in all_items}) == 4
+    print(f"OK  build_digest_themes -> temalar: {names}")
+
+
 if __name__ == "__main__":
     test_parse_variants()
     test_score_news()
+    test_builder()
     test_formatter()
     print("\n✅ Tüm dijest çekirdek testleri geçti.")
