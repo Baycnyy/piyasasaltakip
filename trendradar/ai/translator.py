@@ -162,49 +162,81 @@ class AITranslator:
         if not non_empty_texts:
             return batch_result
 
-        try:
-            # 构建批量翻译内容（使用编号格式）
-            batch_content = self._format_batch_content(non_empty_texts)
+        # Büyük listeleri küçük gruplara böl. Tek çağrıda yüzlerce başlık
+        # gönderince model bazı satırları atlıyor (ve sonrasını yanlış hizalıyor).
+        # Her grup index'e göre hizalanır; çevrilemeyen başlık orijinal kalır.
+        CHUNK_SIZE = 40
+        all_translated: List[str] = [t for t in non_empty_texts]  # varsayılan: orijinal
+        last_prompt = ""
+        last_response = ""
+        had_error = False
+        parsed_total = 0
 
-            # 构建提示词
-            user_prompt = self.user_prompt_template
-            user_prompt = user_prompt.replace("{target_language}", self.target_language)
-            user_prompt = user_prompt.replace("{content}", batch_content)
+        for start in range(0, len(non_empty_texts), CHUNK_SIZE):
+            chunk_texts = non_empty_texts[start : start + CHUNK_SIZE]
+            try:
+                batch_content = self._format_batch_content(chunk_texts)
+                user_prompt = self.user_prompt_template
+                user_prompt = user_prompt.replace("{target_language}", self.target_language)
+                user_prompt = user_prompt.replace("{content}", batch_content)
+                last_prompt = user_prompt
 
-            # 记录 debug 信息（包含完整的 system + user prompt）
-            if self.system_prompt:
-                batch_result.prompt = f"[system]\n{self.system_prompt}\n\n[user]\n{user_prompt}"
-            else:
-                batch_result.prompt = user_prompt
+                response = self._call_ai(user_prompt)
+                last_response = response
 
-            # 调用 AI API
-            response = self._call_ai(user_prompt)
+                idx_map = self._parse_batch_indexed(response)  # {1-tabanlı sıra: çeviri}
+                parsed_total += len(idx_map)
+                for j in range(len(chunk_texts)):
+                    translated = idx_map.get(j + 1, "")
+                    if translated and translated.strip():
+                        all_translated[start + j] = translated
+                    # yoksa orijinal korunur (zaten varsayılan)
+            except Exception as e:
+                had_error = True
+                print(f"[翻译] grup çeviri hatası ({type(e).__name__}: {str(e)[:80]})")
 
-            # 记录 AI 原始响应
-            batch_result.raw_response = response
+        if self.system_prompt:
+            batch_result.prompt = f"[system]\n{self.system_prompt}\n\n[user]\n{last_prompt}"
+        else:
+            batch_result.prompt = last_prompt
+        batch_result.raw_response = last_response
+        batch_result.parsed_count = parsed_total
 
-            # 解析批量翻译结果
-            translated_texts, raw_parsed_count = self._parse_batch_response(response, len(non_empty_texts))
-            batch_result.parsed_count = raw_parsed_count
-
-            # 填充结果（跳过空翻译，避免用空字符串覆盖原始标题）
-            for idx, translated in zip(non_empty_indices, translated_texts):
-                if translated and translated.strip():
-                    batch_result.results[idx].translated_text = translated
-                    batch_result.results[idx].success = True
-                    batch_result.success_count += 1
-                else:
-                    batch_result.results[idx].translated_text = batch_result.results[idx].original_text
-                    batch_result.results[idx].success = True
-                    batch_result.success_count += 1
-
-        except Exception as e:
-            error_msg = f"批量翻译失败: {type(e).__name__}: {str(e)[:100]}"
-            for idx in non_empty_indices:
-                batch_result.results[idx].error = error_msg
-            batch_result.fail_count = len(non_empty_indices)
+        for idx, translated in zip(non_empty_indices, all_translated):
+            batch_result.results[idx].translated_text = translated
+            batch_result.results[idx].success = True
+            batch_result.success_count += 1
+        if had_error:
+            batch_result.error = "bazı gruplar çevrilemedi, orijinal korundu"
 
         return batch_result
+
+    def _parse_batch_indexed(self, response: str) -> Dict[int, str]:
+        """AI yanıtını {1-tabanlı sıra numarası: çeviri} sözlüğüne ayrıştırır.
+
+        Pozisyona değil index'e göre eşler → model bir satırı atlasa bile
+        kalanlar yanlış başlığa kaymaz."""
+        out: Dict[int, str] = {}
+        current_idx = None
+        current_text: List[str] = []
+        for line in response.strip().split("\n"):
+            stripped = line.strip()
+            if stripped.startswith("[") and "]" in stripped:
+                bracket_end = stripped.index("]")
+                try:
+                    idx = int(stripped[1:bracket_end])
+                    if current_idx is not None:
+                        out[current_idx] = "\n".join(current_text).strip()
+                    current_idx = idx
+                    current_text = [stripped[bracket_end + 1 :].strip()]
+                    continue
+                except ValueError:
+                    pass
+            if current_idx is not None:
+                current_text.append(line)
+        if current_idx is not None:
+            out[current_idx] = "\n".join(current_text).strip()
+        return out
 
     def _format_batch_content(self, texts: List[str]) -> str:
         """格式化批量翻译内容"""
