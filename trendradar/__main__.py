@@ -916,38 +916,44 @@ class NewsAnalyzer:
 
         return stats, html_file, ai_result, rss_items
 
-    def _translate_hotlist_titles(self, stats: Optional[List[Dict]]) -> None:
-        """Hotlist (Çin) başlıklarını hedef dile çevirir (yerinde). Hata olursa orijinali korur."""
-        if not stats:
+    def _translate_titles(self, items: List[Dict], batch_size: int = 40) -> None:
+        """Dijest öğelerinin başlıklarını hedef dile (Türkçe) çevirir (yerinde).
+
+        Küçük gruplar halinde çevirir — tek büyük çağrıda AI bazı satırları
+        atlayabiliyor. Çevirici, hedef dilde olan başlıkları zaten korur, bu
+        yüzden tüm öğeler güvenle gönderilebilir. Hata olursa orijinal kalır."""
+        if not items:
             return
         cfg = self.ctx.config
         trans_config = cfg.get("AI_TRANSLATION", {})
-        scope = trans_config.get("SCOPE", {})
-        if not trans_config.get("ENABLED", False) or not scope.get("HOTLIST", False):
+        if not trans_config.get("ENABLED", False):
             return
 
-        refs = []
-        texts = []
-        for stat in stats:
-            for it in stat.get("titles", []):
-                title = (it.get("title") or "").strip()
-                if title:
-                    refs.append(it)
-                    texts.append(title)
-        if not texts:
+        idxs = [i for i, it in enumerate(items) if (it.get("title") or "").strip()]
+        if not idxs:
             return
 
         try:
             from trendradar.ai import AITranslator
 
             translator = AITranslator(trans_config, cfg.get("AI", {}))
-            result = translator.translate_batch(texts)
-            for ref, tr in zip(refs, result.results):
-                if getattr(tr, "success", False) and getattr(tr, "translated_text", ""):
-                    ref["title"] = tr.translated_text
-            print(f"[Dijest] {len(texts)} hotlist başlığı çevrildi")
         except Exception as e:
-            print(f"[Dijest] Hotlist çeviri atlandı ({e}), orijinal başlıklarla devam")
+            print(f"[Dijest] Çevirici kurulamadı ({e}), orijinal başlıklarla devam")
+            return
+
+        done = 0
+        for start in range(0, len(idxs), max(1, batch_size)):
+            chunk = idxs[start : start + batch_size]
+            texts = [items[i]["title"] for i in chunk]
+            try:
+                result = translator.translate_batch(texts)
+                for i, tr in zip(chunk, result.results):
+                    if getattr(tr, "success", False) and getattr(tr, "translated_text", ""):
+                        items[i]["title"] = tr.translated_text
+                        done += 1
+            except Exception as e:
+                print(f"[Dijest] Çeviri grubu atlandı ({e})")
+        print(f"[Dijest] {done}/{len(idxs)} başlık çevrildi")
 
     def _send_digest(self, stats: List[Dict], rss_items: Optional[List[Dict]]) -> None:
         """Günlük dijest: hotlist+RSS'i TR temalarına grupla, AI ile 1-5 puanla, Telegram'a gönder.
@@ -965,16 +971,16 @@ class NewsAnalyzer:
 
         cfg = self.ctx.config
 
-        # Hotlist (Çin kaynakları) başlıklarını Türkçeye çevir.
-        # RSS başlıkları pipeline'da zaten çevrildi; hotlist çevirisi normalde
-        # dispatch_all içinde olur ama dijest onu atladığı için burada yapıyoruz.
-        self._translate_hotlist_titles(stats)
-
         themes = build_digest_themes(stats or [], rss_items or [])
         items = [it for t in themes for it in t["items"]]
         if not items:
             print("[Dijest] Eşleşen haber yok, dijest gönderilmiyor")
             return
+
+        # TÜM başlıkları hedef dile (Türkçe) çevir. İngilizce/Çince çevrilir;
+        # zaten Türkçe olanlar korunur. Daily modda storage'dan gelen eski
+        # öğeler çevrilmemiş olabildiği için burada tam kapsama sağlanır.
+        self._translate_titles(items)
 
         # AI ile 1-5 önem puanı (başarısız olursa nötr puanla devam)
         debug_mode = cfg.get("DEBUG", False)
