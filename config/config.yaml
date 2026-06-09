@@ -59,14 +59,23 @@ rss:
     max_age_days: 1                     # Sadece son 24 saatin haberleri
 
   feeds:
-    # --- Global Finans ---
+    # ─── Global Wire & Piyasa (Wall Street temel akış) ───
     - id: "yahoo-finance"
       name: "Yahoo Finance"
       url: "https://finance.yahoo.com/news/rssindex"
 
-    - id: "reuters-business"
-      name: "Reuters Business"
-      url: "https://feeds.reuters.com/reuters/businessNews"
+    - id: "reuters-gnews"
+      name: "Reuters"
+      # Reuters public RSS'i kapattı; Google News üzerinden site:reuters.com
+      url: "https://news.google.com/rss/search?q=site:reuters.com+business+when:1d&hl=en-US&gl=US&ceid=US:en"
+
+    - id: "bloomberg-gnews"
+      name: "Bloomberg"
+      url: "https://news.google.com/rss/search?q=site:bloomberg.com+markets+when:1d&hl=en-US&gl=US&ceid=US:en"
+
+    - id: "wsj-markets"
+      name: "WSJ Markets"
+      url: "https://feeds.a.dj.com/rss/RSSMarketsMain.xml"
 
     - id: "cnbc"
       name: "CNBC"
@@ -80,7 +89,41 @@ rss:
       name: "Financial Times"
       url: "https://www.ft.com/rss/home"
 
-    # --- Reddit Yatırım Toplulukları ---
+    - id: "bbc-business"
+      name: "BBC Business"
+      url: "https://feeds.bbci.co.uk/news/business/rss.xml"
+
+    # ─── Wall Street profesyonel / hızlı masa ───
+    - id: "forexlive"
+      name: "ForexLive"
+      url: "https://www.forexlive.com/feed/news/"
+
+    - id: "fed-press"
+      name: "Federal Reserve"
+      url: "https://www.federalreserve.gov/feeds/press_all.xml"
+
+    - id: "zerohedge"
+      name: "ZeroHedge"
+      url: "https://feeds.feedburner.com/zerohedge/feed"
+
+    - id: "seeking-alpha"
+      name: "Seeking Alpha"
+      url: "https://seekingalpha.com/market_currents.xml"
+
+    - id: "investing-global"
+      name: "Investing.com"
+      url: "https://www.investing.com/rss/news.rss"
+
+    # ─── Kripto ───
+    - id: "coindesk"
+      name: "CoinDesk"
+      url: "https://www.coindesk.com/arc/outboundfeeds/rss/"
+
+    - id: "cointelegraph"
+      name: "Cointelegraph"
+      url: "https://cointelegraph.com/rss"
+
+    # ─── Reddit (perakende yatırımcı duyarlılığı) ───
     - id: "reddit-investing"
       name: "Reddit r/investing"
       url: "https://www.reddit.com/r/investing/.rss"
@@ -93,14 +136,38 @@ rss:
       name: "Reddit WallStreetBets"
       url: "https://www.reddit.com/r/wallstreetbets/.rss"
 
-    # --- Türk Finans Kaynakları ---
+    # ─── Türk Finans Kaynakları ───
     - id: "bloomberg-ht"
       name: "Bloomberg HT"
       url: "https://www.bloomberght.com/rss"
 
-    - id: "dunya"
-      name: "Dünya Gazetesi"
-      url: "https://www.dunya.com/rss/rss.xml"
+    - id: "aa-ekonomi"
+      name: "AA Ekonomi"
+      url: "https://www.aa.com.tr/tr/rss/default?cat=ekonomi"
+
+    - id: "ekonomim"
+      name: "Ekonomim"
+      url: "https://www.ekonomim.com/rss"
+
+    - id: "investing-tr"
+      name: "Investing TR"
+      url: "https://tr.investing.com/rss/news.rss"
+
+    - id: "trt-ekonomi"
+      name: "TRT Haber Ekonomi"
+      url: "https://www.trthaber.com/ekonomi_articles.rss"
+
+    - id: "hurriyet-ekonomi"
+      name: "Hürriyet Ekonomi"
+      url: "https://www.hurriyet.com.tr/rss/ekonomi"
+
+    - id: "ntv-ekonomi"
+      name: "NTV Ekonomi"
+      url: "https://www.ntv.com.tr/ekonomi.rss"
+
+    - id: "sabah-ekonomi"
+      name: "Sabah Ekonomi"
+      url: "https://www.sabah.com.tr/rss/ekonomi.xml"
 
 
 # ===============================================================
