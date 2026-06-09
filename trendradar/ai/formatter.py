@@ -81,35 +81,35 @@ def render_ai_analysis_markdown(result: AIAnalysisResult) -> str:
     if not result.success:
         if result.skipped:
             return f"ℹ️ {result.error}"
-        return f"⚠️ AI 分析失败: {result.error}"
+        return f"⚠️ AI analizi başarısız: {result.error}"
 
-    lines = ["**✨ AI 热点分析**", ""]
+    lines = ["**✨ AI Piyasa Analizi**", ""]
 
     if result.core_trends:
-        lines.extend(["**核心热点态势**", _format_list_content(result.core_trends), ""])
+        lines.extend(["**Temel Piyasa Görünümü**", _format_list_content(result.core_trends), ""])
 
     if result.sentiment_controversy:
         lines.extend(
-            ["**舆论风向争议**", _format_list_content(result.sentiment_controversy), ""]
+            ["**Piyasa Duyarlılığı ve Tartışmalar**", _format_list_content(result.sentiment_controversy), ""]
         )
 
     if result.signals:
-        lines.extend(["**异动与弱信号**", _format_list_content(result.signals), ""])
+        lines.extend(["**Dikkat Çeken Hareketler ve Zayıf Sinyaller**", _format_list_content(result.signals), ""])
 
     if result.rss_insights:
         lines.extend(
-            ["**RSS 深度洞察**", _format_list_content(result.rss_insights), ""]
+            ["**RSS Derin İçgörüler**", _format_list_content(result.rss_insights), ""]
         )
 
     if result.outlook_strategy:
         lines.extend(
-            ["**研判策略建议**", _format_list_content(result.outlook_strategy), ""]
+            ["**Görünüm ve Strateji Önerileri**", _format_list_content(result.outlook_strategy), ""]
         )
 
     if result.standalone_summaries:
         summaries_text = _format_standalone_summaries(result.standalone_summaries)
         if summaries_text:
-            lines.extend(["**独立源点速览**", summaries_text])
+            lines.extend(["**Bağımsız Kaynak Özetleri**", summaries_text])
 
     return "\n".join(lines)
 
@@ -119,35 +119,35 @@ def render_ai_analysis_feishu(result: AIAnalysisResult) -> str:
     if not result.success:
         if result.skipped:
             return f"ℹ️ {result.error}"
-        return f"⚠️ AI 分析失败: {result.error}"
+        return f"⚠️ AI analizi başarısız: {result.error}"
 
-    lines = ["**✨ AI 热点分析**", ""]
+    lines = ["**✨ AI Piyasa Analizi**", ""]
 
     if result.core_trends:
-        lines.extend(["**核心热点态势**", _format_list_content(result.core_trends), ""])
+        lines.extend(["**Temel Piyasa Görünümü**", _format_list_content(result.core_trends), ""])
 
     if result.sentiment_controversy:
         lines.extend(
-            ["**舆论风向争议**", _format_list_content(result.sentiment_controversy), ""]
+            ["**Piyasa Duyarlılığı ve Tartışmalar**", _format_list_content(result.sentiment_controversy), ""]
         )
 
     if result.signals:
-        lines.extend(["**异动与弱信号**", _format_list_content(result.signals), ""])
+        lines.extend(["**Dikkat Çeken Hareketler ve Zayıf Sinyaller**", _format_list_content(result.signals), ""])
 
     if result.rss_insights:
         lines.extend(
-            ["**RSS 深度洞察**", _format_list_content(result.rss_insights), ""]
+            ["**RSS Derin İçgörüler**", _format_list_content(result.rss_insights), ""]
         )
 
     if result.outlook_strategy:
         lines.extend(
-            ["**研判策略建议**", _format_list_content(result.outlook_strategy), ""]
+            ["**Görünüm ve Strateji Önerileri**", _format_list_content(result.outlook_strategy), ""]
         )
 
     if result.standalone_summaries:
         summaries_text = _format_standalone_summaries(result.standalone_summaries)
         if summaries_text:
-            lines.extend(["**独立源点速览**", summaries_text])
+            lines.extend(["**Bağımsız Kaynak Özetleri**", summaries_text])
 
     return "\n".join(lines)
 
@@ -157,41 +157,41 @@ def render_ai_analysis_dingtalk(result: AIAnalysisResult) -> str:
     if not result.success:
         if result.skipped:
             return f"ℹ️ {result.error}"
-        return f"⚠️ AI 分析失败: {result.error}"
+        return f"⚠️ AI analizi başarısız: {result.error}"
 
-    lines = ["### ✨ AI 热点分析", ""]
+    lines = ["### ✨ AI Piyasa Analizi", ""]
 
     if result.core_trends:
         lines.extend(
-            ["#### 核心热点态势", _format_list_content(result.core_trends), ""]
+            ["#### Temel Piyasa Görünümü", _format_list_content(result.core_trends), ""]
         )
 
     if result.sentiment_controversy:
         lines.extend(
             [
-                "#### 舆论风向争议",
+                "#### Piyasa Duyarlılığı ve Tartışmalar",
                 _format_list_content(result.sentiment_controversy),
                 "",
             ]
         )
 
     if result.signals:
-        lines.extend(["#### 异动与弱信号", _format_list_content(result.signals), ""])
+        lines.extend(["#### Dikkat Çeken Hareketler ve Zayıf Sinyaller", _format_list_content(result.signals), ""])
 
     if result.rss_insights:
         lines.extend(
-            ["#### RSS 深度洞察", _format_list_content(result.rss_insights), ""]
+            ["#### RSS Derin İçgörüler", _format_list_content(result.rss_insights), ""]
         )
 
     if result.outlook_strategy:
         lines.extend(
-            ["#### 研判策略建议", _format_list_content(result.outlook_strategy), ""]
+            ["#### Görünüm ve Strateji Önerileri", _format_list_content(result.outlook_strategy), ""]
         )
 
     if result.standalone_summaries:
         summaries_text = _format_standalone_summaries(result.standalone_summaries)
         if summaries_text:
-            lines.extend(["#### 独立源点速览", summaries_text])
+            lines.extend(["#### Bağımsız Kaynak Özetleri", summaries_text])
 
     return "\n".join(lines)
 
@@ -201,31 +201,31 @@ def render_ai_analysis_plain(result: AIAnalysisResult) -> str:
     if not result.success:
         if result.skipped:
             return result.error
-        return f"AI 分析失败: {result.error}"
+        return f"AI analizi başarısız: {result.error}"
 
-    lines = ["【✨ AI 热点分析】", ""]
+    lines = ["【✨ AI Piyasa Analizi】", ""]
 
     if result.core_trends:
-        lines.extend(["[核心热点态势]", _format_list_content(result.core_trends), ""])
+        lines.extend(["[Temel Piyasa Görünümü]", _format_list_content(result.core_trends), ""])
 
     if result.sentiment_controversy:
         lines.extend(
-            ["[舆论风向争议]", _format_list_content(result.sentiment_controversy), ""]
+            ["[Piyasa Duyarlılığı ve Tartışmalar]", _format_list_content(result.sentiment_controversy), ""]
         )
 
     if result.signals:
-        lines.extend(["[异动与弱信号]", _format_list_content(result.signals), ""])
+        lines.extend(["[Dikkat Çeken Hareketler ve Zayıf Sinyaller]", _format_list_content(result.signals), ""])
 
     if result.rss_insights:
-        lines.extend(["[RSS 深度洞察]", _format_list_content(result.rss_insights), ""])
+        lines.extend(["[RSS Derin İçgörüler]", _format_list_content(result.rss_insights), ""])
 
     if result.outlook_strategy:
-        lines.extend(["[研判策略建议]", _format_list_content(result.outlook_strategy), ""])
+        lines.extend(["[Görünüm ve Strateji Önerileri]", _format_list_content(result.outlook_strategy), ""])
 
     if result.standalone_summaries:
         summaries_text = _format_standalone_summaries(result.standalone_summaries)
         if summaries_text:
-            lines.extend(["[独立源点速览]", summaries_text])
+            lines.extend(["[Bağımsız Kaynak Özetleri]", summaries_text])
 
     return "\n".join(lines)
 
@@ -240,29 +240,29 @@ def render_ai_analysis_telegram(result: AIAnalysisResult) -> str:
     if not result.success:
         if result.skipped:
             return f"ℹ️ {_escape_html(result.error)}"
-        return f"⚠️ AI 分析失败: {_escape_html(result.error)}"
+        return f"⚠️ AI analizi başarısız: {_escape_html(result.error)}"
 
-    lines = ["<b>✨ AI 热点分析</b>", ""]
+    lines = ["<b>✨ AI Piyasa Analizi</b>", ""]
 
     if result.core_trends:
-        lines.extend(["<b>核心热点态势</b>", _escape_html(_format_list_content(result.core_trends)), ""])
+        lines.extend(["<b>Temel Piyasa Görünümü</b>", _escape_html(_format_list_content(result.core_trends)), ""])
 
     if result.sentiment_controversy:
-        lines.extend(["<b>舆论风向争议</b>", _escape_html(_format_list_content(result.sentiment_controversy)), ""])
+        lines.extend(["<b>Piyasa Duyarlılığı ve Tartışmalar</b>", _escape_html(_format_list_content(result.sentiment_controversy)), ""])
 
     if result.signals:
-        lines.extend(["<b>异动与弱信号</b>", _escape_html(_format_list_content(result.signals)), ""])
+        lines.extend(["<b>Dikkat Çeken Hareketler ve Zayıf Sinyaller</b>", _escape_html(_format_list_content(result.signals)), ""])
 
     if result.rss_insights:
-        lines.extend(["<b>RSS 深度洞察</b>", _escape_html(_format_list_content(result.rss_insights)), ""])
+        lines.extend(["<b>RSS Derin İçgörüler</b>", _escape_html(_format_list_content(result.rss_insights)), ""])
 
     if result.outlook_strategy:
-        lines.extend(["<b>研判策略建议</b>", _escape_html(_format_list_content(result.outlook_strategy)), ""])
+        lines.extend(["<b>Görünüm ve Strateji Önerileri</b>", _escape_html(_format_list_content(result.outlook_strategy)), ""])
 
     if result.standalone_summaries:
         summaries_text = _format_standalone_summaries(result.standalone_summaries)
         if summaries_text:
-            lines.extend(["<b>独立源点速览</b>", _escape_html(summaries_text)])
+            lines.extend(["<b>Bağımsız Kaynak Özetleri</b>", _escape_html(summaries_text)])
 
     return "\n".join(lines)
 
@@ -294,16 +294,16 @@ def render_ai_analysis_html_rich(result: AIAnalysisResult) -> str:
                 <div class="ai-section">
                     <div class="ai-info">ℹ️ {_escape_html(str(result.error))}</div>
                 </div>"""
-        error_msg = result.error or "未知错误"
+        error_msg = result.error or "bilinmeyen hata"
         return f"""
                 <div class="ai-section">
-                    <div class="ai-warning">AI 分析失败: {_escape_html(str(error_msg))}</div>
+                    <div class="ai-warning">AI analizi başarısız: {_escape_html(str(error_msg))}</div>
                 </div>"""
 
     ai_html = """
                 <div class="ai-section">
                     <div class="ai-section-header">
-                        <div class="ai-section-title">✨ AI 热点分析</div>
+                        <div class="ai-section-title">✨ AI Piyasa Analizi</div>
                         <span class="ai-section-badge">AI</span>
                     </div>
                     <div class="ai-blocks-grid">"""
@@ -313,7 +313,7 @@ def render_ai_analysis_html_rich(result: AIAnalysisResult) -> str:
         content_html = _escape_html(content).replace("\n", "<br>")
         ai_html += f"""
                     <div class="ai-block">
-                        <div class="ai-block-title">核心热点态势</div>
+                        <div class="ai-block-title">Temel Piyasa Görünümü</div>
                         <div class="ai-block-content">{content_html}</div>
                     </div>"""
 
@@ -322,7 +322,7 @@ def render_ai_analysis_html_rich(result: AIAnalysisResult) -> str:
         content_html = _escape_html(content).replace("\n", "<br>")
         ai_html += f"""
                     <div class="ai-block">
-                        <div class="ai-block-title">舆论风向争议</div>
+                        <div class="ai-block-title">Piyasa Duyarlılığı ve Tartışmalar</div>
                         <div class="ai-block-content">{content_html}</div>
                     </div>"""
 
@@ -331,7 +331,7 @@ def render_ai_analysis_html_rich(result: AIAnalysisResult) -> str:
         content_html = _escape_html(content).replace("\n", "<br>")
         ai_html += f"""
                     <div class="ai-block">
-                        <div class="ai-block-title">异动与弱信号</div>
+                        <div class="ai-block-title">Dikkat Çeken Hareketler ve Zayıf Sinyaller</div>
                         <div class="ai-block-content">{content_html}</div>
                     </div>"""
 
@@ -340,7 +340,7 @@ def render_ai_analysis_html_rich(result: AIAnalysisResult) -> str:
         content_html = _escape_html(content).replace("\n", "<br>")
         ai_html += f"""
                     <div class="ai-block">
-                        <div class="ai-block-title">RSS 深度洞察</div>
+                        <div class="ai-block-title">RSS Derin İçgörüler</div>
                         <div class="ai-block-content">{content_html}</div>
                     </div>"""
 
@@ -349,7 +349,7 @@ def render_ai_analysis_html_rich(result: AIAnalysisResult) -> str:
         content_html = _escape_html(content).replace("\n", "<br>")
         ai_html += f"""
                     <div class="ai-block">
-                        <div class="ai-block-title">研判策略建议</div>
+                        <div class="ai-block-title">Görünüm ve Strateji Önerileri</div>
                         <div class="ai-block-content">{content_html}</div>
                     </div>"""
 
@@ -359,7 +359,7 @@ def render_ai_analysis_html_rich(result: AIAnalysisResult) -> str:
             summaries_html = _escape_html(summaries_text).replace("\n", "<br>")
             ai_html += f"""
                     <div class="ai-block">
-                        <div class="ai-block-title">独立源点速览</div>
+                        <div class="ai-block-title">Bağımsız Kaynak Özetleri</div>
                         <div class="ai-block-content">{summaries_html}</div>
                     </div>"""
 
